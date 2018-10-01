@@ -4,47 +4,68 @@
 
 #include <windows.h>
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
+
+wchar_t ClassName[] = L"Shape";
+
+class Window
+{
+public:
+	HWND hwnd;              
+	MSG msg;              
+	WNDCLASS wc;			
+
+	WORD Register(HINSTANCE hinstance) 
+	{
+		wc.hInstance = hinstance;
+		wc.lpszClassName = ClassName;
+		wc.lpfnWndProc = WindowProc;                
+		wc.style = CS_HREDRAW | CS_VREDRAW;     
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);    
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW); 
+		wc.lpszMenuName = NULL;       
+		wc.cbClsExtra = 0;            
+		wc.cbWndExtra = 0;            
+		wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+		WORD successful = RegisterClass(&wc);
+		return successful;
+	}
+
+	HWND Create(HINSTANCE hInstance)
+	{
+		hwnd = CreateWindow(
+			ClassName, 
+			L"WindowName",
+			WS_OVERLAPPEDWINDOW,         
+			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+			HWND_DESKTOP, 
+			NULL,         
+			hInstance,
+			NULL
+		);   
+		return hwnd;
+	}
+
+	BOOL Show() 
+	{
+		return ShowWindow(hwnd, SW_SHOW); 
+	}
+};
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-	// Register the window class.
-	const wchar_t CLASS_NAME[] = L"Win32Sprite";
+	MSG msg;
+	Window window;
 
-	WNDCLASS wc = { };
+	window.Register(hInstance);
 
-	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = hInstance;
-	wc.lpszClassName = CLASS_NAME;
-
-	RegisterClass(&wc);
-
-
-	HWND hwnd = CreateWindowEx(
-		0,                              // Optional window styles.
-		CLASS_NAME,                     // Window class
-		L"Win32Sprite",					// Window text
-		WS_OVERLAPPEDWINDOW,            // Window style
-
-		// Size and position
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-		NULL,       // Parent window    
-		NULL,       // Menu
-		hInstance,  // Instance handle
-		NULL        // Additional application data
-	);
-
-	if (hwnd == NULL)
+	if (window.Create(hInstance) == NULL)
 	{
-		return 0;
+		return -1;
 	}
 
-	ShowWindow(hwnd, nCmdShow);
+	window.Show();
 
-	// Run the message loop.
-
-	MSG msg = { };
 	BOOL result;
 	while (result = GetMessage(&msg, NULL, 0, 0))
 	{
