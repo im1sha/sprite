@@ -6,13 +6,18 @@
 Window::Window(HINSTANCE hInstance, int nCmdShow)
 {
 	registerClass(hInstance);
+	
+	sprite_ = new Sprite();
+	handler_ = new Handler(sprite_);
+
 	create(hInstance);
 	show();
 }
 
 Window::~Window()
 {
-
+	delete handler_;
+	delete sprite_;
 }
 
 WORD Window::registerClass(HINSTANCE hInstance)
@@ -36,7 +41,7 @@ HWND Window::create(HINSTANCE hInstance)
 {
 	hwnd_ = CreateWindow(
 		className_,
-		L"Win32Sprite",
+		windowName_,
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		HWND_DESKTOP,
@@ -47,14 +52,57 @@ HWND Window::create(HINSTANCE hInstance)
 	return hwnd_;
 }
 
+void Window::BoundAction(POINT p)
+{	
+	if (sprite_->x_ < sprite_->radius_) {
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ += 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ += 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ += 14;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+	}
+	if (sprite_->y_ < sprite_->radius_) {
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ += 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ += 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ += 14;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+	}
+	if (sprite_->x_ >= p.x - sprite_->radius_) {
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ -= 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ -= 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->x_ -= 14;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+	}
+	if (sprite_->y_ > p.y - sprite_->radius_) {
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ -= 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ -= 5;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, true);
+		sprite_->y_ -= 14;
+		InvalidateRect(hwnd_, &sprite_->spriteRect_, false);
+	}
+}
+
 BOOL Window::show()
 {
 	return ShowWindow(hwnd_, SW_SHOW);
-}
-
-HWND Window::getWindowHandle()
-{
-	return hwnd_;
 }
 
 int Window::messageLoop()
@@ -73,6 +121,8 @@ int Window::messageLoop()
 	return 0;
 }
 
+
+// redirect to HANDLER CLASS here
 LRESULT CALLBACK Window::windowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)

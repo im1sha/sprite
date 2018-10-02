@@ -4,6 +4,14 @@
 
 #include "Sprite.h"
 
+Sprite::Sprite()
+{
+}
+
+Sprite::~Sprite()
+{
+}
+
 void Sprite::createMoveParameters()
 {	
 	radius_ = defaultRadius_;

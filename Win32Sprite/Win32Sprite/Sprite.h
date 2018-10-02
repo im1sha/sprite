@@ -6,26 +6,20 @@
 
 #include <cmath>
 #include <ctime>
-
-#include "Sprite.h"
-#include "Window.h"
-
+#include <windows.h>
 
 class Sprite
 {
 public:
+	Sprite();
+
+	~Sprite();
+
 	void createMoveParameters();
 
 	void invalidate(HWND &hwnd);
 
 	void create(HWND hwnd);
-
-private:
-	const double pi_ = 3.14;
-	const int semicircleInDegrees_ = 180;
-	const int circleInDegrees_ = 360;
-	const int defaultRadius_ = 20;
-	const double defaultSpeed_ = 10.0;
 
 	RECT spriteRect_;
 	int x_;
@@ -33,4 +27,11 @@ private:
 	int radius_;
 	int deltaX_;
 	int deltaY_;
+
+private:
+	const double pi_ = 3.14;
+	const int semicircleInDegrees_ = 180;
+	const int circleInDegrees_ = 360;
+	const int defaultRadius_ = 20;
+	const double defaultSpeed_ = 10.0;	
 };
