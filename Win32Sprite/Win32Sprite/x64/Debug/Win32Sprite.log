@@ -1,2 +1,5 @@
 ﻿  Sprite.cpp
+d:\foxx github\operating-systems\win32sprite\win32sprite\sprite.cpp(84): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\foxx github\operating-systems\win32sprite\win32sprite\sprite.cpp(95): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+d:\foxx github\operating-systems\win32sprite\win32sprite\sprite.cpp(96): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
   Win32Sprite.vcxproj -> D:\Foxx Github\operating-systems\Win32Sprite\x64\Debug\Win32Sprite.exe
