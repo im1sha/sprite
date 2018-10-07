@@ -12,7 +12,7 @@ Sprite::~Sprite()
 {
 	if (isAnimated_)
 	{
-		KillTimer(hWnd_, timerNo_);
+		KillTimer(hWnd_, TIMER_NO);
 	}
 }
 
@@ -39,9 +39,9 @@ bool Sprite::load()
 	return successful;
 }
 
-bool Sprite::loadDefault(LPARAM lParam)
+bool Sprite::loadDefault()
 {
-	image_ = LoadBitmap((HINSTANCE)lParam, MAKEINTRESOURCE(IDB_BITMAP1));
+	image_ = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
 	bool successful = (image_ != 0);
 	if (successful)
 	{
@@ -167,31 +167,32 @@ void Sprite::respondOnRightButtonClick(LPARAM lParam)
 			position_.Y + static_cast<SHORT>(imageSize_.cy) / 2
 		};
 
-		SHORT xdirection = (imageCenter.X < clickPosition.X) ? 1 : -1;
-		SHORT ydirection = (imageCenter.Y < clickPosition.Y) ? 1 : -1;
+		SHORT xDirection = (imageCenter.X < clickPosition.X) ? 1 : -1;
+		SHORT yDirection = (imageCenter.Y < clickPosition.Y) ? 1 : -1;
 
-		SHORT aOfClick = abs(clickPosition.X - imageCenter.X);
-		SHORT bOfClick = abs(clickPosition.Y - imageCenter.Y);
-		SHORT cOfClick = static_cast<SHORT>(pow((pow(static_cast<double>(clickPosition.X), 2) +
-			pow(static_cast<double>(clickPosition.Y), 2)), 0.5));
+		SHORT clickDeltaX = abs(clickPosition.X - imageCenter.X);
+		SHORT clickDeltaY = abs(clickPosition.Y - imageCenter.Y);
+		SHORT clickDistance = static_cast<SHORT>(pow(pow(static_cast<double>(clickDeltaX), 2.0) + 
+			pow(static_cast<double>(clickDeltaY), 2.0), 
+			0.5));
 
-		SHORT c = DEFAULT_SHIFT;
-		SHORT a = static_cast<SHORT>(static_cast<double>(aOfClick) / cOfClick * c) * xdirection;
-		SHORT b = static_cast<SHORT>(static_cast<double>(bOfClick) / cOfClick * c) * ydirection;
+		SHORT distance = static_cast<SHORT>(DEFAULT_SHIFT * 0.8);
+		SHORT deltaX = static_cast<SHORT>(static_cast<double>(clickDeltaX) / clickDistance * distance) * xDirection;
+		SHORT deltaY = static_cast<SHORT>(static_cast<double>(clickDeltaY) / clickDistance * distance) * yDirection;
 
-		if ((a == 0) && (b == 0))
+		if ((deltaX == 0) && (deltaY == 0))
 		{
 			return;
 		}
-		animationShift_ = { a, b };
+		animationShift_ = { deltaX, deltaY };
 
 		isAnimated_ = true;
-		SetTimer(hWnd_, timerNo_, 30, 0);
+		SetTimer(hWnd_, TIMER_NO, 30, 0);
 	}
 	else
 	{
 		isAnimated_ = false;
-		KillTimer(hWnd_, timerNo_);
+		KillTimer(hWnd_, TIMER_NO);
 	}
 }
 

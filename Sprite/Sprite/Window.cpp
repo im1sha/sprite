@@ -77,7 +77,7 @@ LRESULT CALLBACK Window::windowProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
 		{
 	case WM_SPRITE_DEFAULT_IMAGE:
 	{
-		sprite->loadDefault(lParam);
+		sprite->loadDefault();
 		break;
 	}
 	case WM_SPRITE_LOADING:

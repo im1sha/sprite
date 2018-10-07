@@ -24,7 +24,7 @@ public:
 
 	bool update();
 
-	bool loadDefault(LPARAM lParam);
+	bool loadDefault();
 
 	void respondOnLeftButtonClick(LPARAM lParam);
 
@@ -49,7 +49,7 @@ private:
 
 	bool isClicked_ = false;
 
-	UINT_PTR timerNo_ = 1;
+	const UINT_PTR TIMER_NO = 1;
 	bool isAnimated_ = false;
 	COORD animationShift_ = { 0, 0 };
 
